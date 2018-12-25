@@ -4,7 +4,6 @@ kind: Service
 metadata:
   labels:
     app: authenticate
-    environment: prod
     country: es
     tier: frontend
   name: prod-authenticate
