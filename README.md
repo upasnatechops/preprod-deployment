@@ -1,5 +1,3 @@
 # preprod-deployment
 
-qwqeguqeiqwesjd
-
-dsdfsgfhgjh
+yashika
