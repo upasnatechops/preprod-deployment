@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-config-authenticate
+  namespace: es-prod
+  labels:
+    app: authenticate
+    environment: prod
+    country: es
+    tier: frontend
+data:
+  spring.cloud.config.uri: http://prod-config-server.es-prod.svc.cluster.local:8899
+  #backendBasePath: http://a4d17ea564d3411e89d9a02539833dd4-1838071865.eu-central-1.elb.amazonaws.com
+  #backendBasePort: "7000"
+  backendBasePath: http://internal-es-prod-vpn-l7-router-lb-593362450.eu-central-1.elb.amazonaws.com
+  backendBasePort: "8081"
+  application.properties: |-
+    ulff.kafka.configuration.acks= 0
+    kafka.server.url= 10.178.187.56:9092,10.178.187.59:9092,10.178.187.52:9092
+    kafka.topic= vf.myvdf.es.prod.ms.ulff
+    kafka.enabled= true

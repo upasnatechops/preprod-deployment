@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: authenticate
+    environment: prod
+    country: es
+    tier: frontend
+  name: prod-authenticate
+  namespace: es-prod
+spec:
+  type: NodePort
+  selector:
+    app: authenticate
+  ports:
+  - name: http
+    port: 8182
+    targetPort: 8182

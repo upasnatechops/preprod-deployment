@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: prod-authenticate
+  namespace: es-prod
+  labels:
+    app: authenticate
+    environment: prod
+    country: es
+    tier: backend
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: prod-authenticate 
+  targetCPUUtilizationPercentage: 700
+

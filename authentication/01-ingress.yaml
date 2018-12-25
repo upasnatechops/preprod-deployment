@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "false"
+    nginx.ingress.kubernetes.io/auth-tls-secret: es-prod/pkiv01-es-prod-rootca-cert
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "3"
+  labels:
+    app: authenticate
+    environment: prod
+    country: es
+    pki: v01
+    tier: frontend
+  name: pkiv01-prod-authenticate
+  namespace: es-prod
+spec:
+  rules:
+  - host: pkiv01-authenticate-es.myvdf-internal.aws.cps.vodafone.com
+    http:
+      paths:
+      - backend:
+          serviceName: prod-authenticate
+          servicePort: 8182
+        path: /
+  tls:
+  - hosts:
+    - pkiv01-authenticate-es.myvdf-internal.aws.cps.vodafone.com
+    secretName: pkiv01-es-prod-wildcard-cert

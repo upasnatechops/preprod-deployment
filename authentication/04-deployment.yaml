@@ -1,0 +1,94 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: authenticate
+    environment: prod
+    country: es
+    tier: frontend
+  name: prod-authenticate
+  namespace: es-prod
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 33%
+      maxSurge: 100%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        environment: prod
+        app: authenticate
+        country: es
+        tier: frontend
+    spec:
+      serviceAccountName: saprodauthenticate
+      containers:
+      - name: application
+        image: nexus-registry.myvdf.aws.cps.vodafone.com/authentication-service-preprod:v.13
+        imagePullPolicy: Always
+        env:
+        - name: ES_DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secrets
+              key: es_db_username
+        - name: ES_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secrets
+              key: es_db_password
+        - name: spring.cloud.config.uri
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-authenticate
+              key:  spring.cloud.config.uri
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: encryption-key
+              key: password
+        - name: BACKEND_BASE_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-authenticate
+              key: backendBasePath
+        - name: BACKEND_BASE_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: application-config-authenticate
+              key: backendBasePort
+        ports:
+        - containerPort: 8182
+          name: http
+        #- containerPort: 8182
+        #  name: management
+        #readinessProbe:
+        #  httpGet:
+        #    path: /health
+        #    port: 8182
+        #  initialDelaySeconds: 5
+        #  periodSeconds: 5
+        #livenessProbe:
+        #  httpGet:
+        #    path: /health
+        #    port: 8182
+        #  initialDelaySeconds: 60
+        resources:
+          requests:
+            cpu: 200m
+            memory: "1Gi"
+          limits:
+            cpu: 2000m
+            memory: "2Gi"
+        volumeMounts:
+        - mountPath: /config
+          name: application-config
+      imagePullSecrets:
+      - name: pkiv01-myvdf-nexus-secrets-cert
+      volumes:
+      - name: application-config
+        configMap:
+          name: application-config-authenticate
