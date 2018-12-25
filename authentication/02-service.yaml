@@ -13,6 +13,7 @@ spec:
   type: NodePort
   selector:
     app: authenticate
+    environment: prod
   ports:
   - name: http
     port: 8182
