@@ -20,7 +20,7 @@ pipeline {
             echo "Changes seen in repo " $repo_name " in branch" $branch_name
 			#kubectl delete namespace preprod-es-mongo
 			#sleep 30
-            kubectl apply -f ./"$branch_name" --namespace preprod
+            kubectl apply -f ./"$branch_name" --namespace mynewproject-preprod
             """
           }
         }
